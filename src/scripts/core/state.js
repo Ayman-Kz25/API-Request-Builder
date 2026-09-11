@@ -15,6 +15,7 @@ export function createDefaultRequest() {
         params: [],
         headers: [],
         body: "",
+        bodyType: "json",
         auth: {
             type: DEFAULT_AUTH.type,
             fields: {},

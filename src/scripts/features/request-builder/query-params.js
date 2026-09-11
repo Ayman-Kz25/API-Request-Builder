@@ -55,6 +55,12 @@ function updateEmptyState() {
     );
 }
 
+function emitChange() {
+    document.dispatchEvent(new CustomEvent("query-params:change", {
+        detail: { params: getQueryParams() },
+    }));
+}
+
 function bindEvents() {
     elements.addButton?.addEventListener("click", (event) => {
         event.preventDefault();
@@ -76,6 +82,9 @@ function bindEvents() {
             removeQueryParam(row);
         }
     });
+
+    elements.container?.addEventListener("input", emitChange);
+    elements.container?.addEventListener("change", emitChange);
 }
 
 function createRow(param = {}) {
@@ -142,6 +151,8 @@ export function initQueryParams() {
 
     updateEmptyState();
 
+    emitChange();
+
     return {
         getQueryParams,
         setQueryParams,
@@ -163,6 +174,8 @@ export function addQueryParam(param = {}) {
     container.appendChild(row);
 
     updateEmptyState();
+
+    emitChange();
 
     row.querySelector(".query-param-key")?.focus();
 

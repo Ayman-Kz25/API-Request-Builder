@@ -321,6 +321,7 @@ async function handleSendRequest() {
       method: request.method,
       headers: request.headers,
       body: request.body,
+      bodyType: request.bodyType,
       auth: request.auth,
     });
 

@@ -27,7 +27,11 @@ body { overflow-y: auto; }
   position: absolute !important;
   inset: 0;
   height: 0;
+  pointer-events: none;
 }
+
+#modal-root > *,
+#dropdown-root > * { pointer-events: auto; }
 
 #live-region {
   position: absolute !important;

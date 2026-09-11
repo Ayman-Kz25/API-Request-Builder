@@ -339,6 +339,14 @@
                       <option value="OPTIONS">
                         OPTIONS
                       </option>
+
+                      <option value="TRACE">
+                        TRACE
+                      </option>
+
+                      <option value="CUSTOM">
+                        Custom…
+                      </option>
                     </select>
 
                     <i
@@ -346,6 +354,15 @@
                       class="pointer-events-none absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
                       aria-hidden="true"></i>
                   </div>
+
+                  <input
+                    id="custom-request-method"
+                    type="text"
+                    maxlength="20"
+                    autocomplete="off"
+                    spellcheck="false"
+                    placeholder="METHOD"
+                    class="hidden h-10 w-28 shrink-0 rounded-md border border-border bg-surface px-3 font-mono text-xs font-semibold uppercase outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20" />
 
                   <!-- URL -->
                   <div
@@ -523,10 +540,23 @@
                         </p>
                       </div>
 
-                      <button
-                        id="add-header-button"
-                        type="button"
-                        class="inline-flex h-8 w-fit shrink-0 items-center gap-1.5 rounded-md border border-border bg-surface px-2.5 text-xs font-medium transition hover:bg-surface-raised">
+                      <div class="flex shrink-0 items-center gap-2">
+                        <select
+                          id="header-preset-select"
+                          class="h-8 max-w-36 rounded-md border border-border bg-surface px-2 text-xs outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+                          aria-label="Add common header preset">
+                          <option value="">Header preset</option>
+                          <option value="Accept:application/json">Accept: JSON</option>
+                          <option value="Content-Type:application/json">Content-Type: JSON</option>
+                          <option value="Authorization:Bearer ">Authorization: Bearer</option>
+                          <option value="Cache-Control:no-cache">Cache-Control: no-cache</option>
+                          <option value="X-API-Key:">X-API-Key</option>
+                        </select>
+
+                        <button
+                          id="add-header-button"
+                          type="button"
+                          class="inline-flex h-8 w-fit shrink-0 items-center gap-1.5 rounded-md border border-border bg-surface px-2.5 text-xs font-medium transition hover:bg-surface-raised">
                         <i
                           data-lucide="plus"
                           class="h-3.5 w-3.5"
@@ -534,6 +564,7 @@
 
                         Add header
                       </button>
+                      </div>
                     </div>
 
                     <div
@@ -571,6 +602,19 @@
 
                       <div
                         class="flex shrink-0 flex-wrap items-center gap-2">
+                        <select
+                          id="body-type"
+                          class="h-8 rounded-md border border-border bg-surface px-2 text-xs outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+                          aria-label="Request body type">
+                          <option value="json">JSON</option>
+                          <option value="text">Raw text</option>
+                          <option value="javascript">JavaScript</option>
+                          <option value="xml">XML</option>
+                          <option value="html">HTML</option>
+                          <option value="form-urlencoded">Form URL Encoded</option>
+                          <option value="multipart">Multipart Form Data</option>
+                        </select>
+
                         <button
                           id="format-body-button"
                           type="button"
@@ -595,6 +639,36 @@
                     <div
                       id="json-editor"
                       class="min-h-[180px] min-w-0 max-w-full overflow-hidden rounded-md border border-border bg-surface sm:min-h-[220px]"></div>
+
+                    <textarea
+                      id="raw-body-editor"
+                      class="hidden min-h-[220px] w-full resize-y rounded-md border border-border bg-surface p-3 font-mono text-xs leading-6 outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+                      spellcheck="false"
+                      placeholder="Enter request body"></textarea>
+
+                    <div
+                      id="structured-body-editor"
+                      class="hidden space-y-3">
+                      <div class="flex items-center justify-between gap-3">
+                        <p id="structured-body-hint" class="text-xs text-muted-foreground">
+                          Add fields to include in the request body.
+                        </p>
+
+                        <button
+                          id="add-body-field-button"
+                          type="button"
+                          class="inline-flex h-8 shrink-0 items-center gap-1.5 rounded-md border border-border bg-surface px-2.5 text-xs font-medium transition hover:bg-surface-raised">
+                          <i data-lucide="plus" class="h-3.5 w-3.5" aria-hidden="true"></i>
+                          Add field
+                        </button>
+                      </div>
+
+                      <div id="body-fields-list" class="space-y-2"></div>
+
+                      <div id="body-fields-empty" class="rounded-md border border-dashed border-border px-4 py-8 text-center text-xs text-muted-foreground">
+                        No fields added.
+                      </div>
+                    </div>
                   </section>
 
                   <!-- Auth -->
@@ -639,6 +713,10 @@
 
                         <option value="api-key">
                           API Key
+                        </option>
+
+                        <option value="oauth2">
+                          OAuth 2.0
                         </option>
                       </select>
                     </div>

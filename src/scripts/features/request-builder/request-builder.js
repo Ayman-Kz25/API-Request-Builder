@@ -17,6 +17,7 @@ import {
 import {
     getQueryParams,
     setQueryParams,
+    parseQueryParamsFromUrl,
 } from "./query-params.js";
 
 import {
@@ -27,6 +28,8 @@ import {
 import {
     getRequestBody,
     setRequestBody,
+    getBodyType,
+    setBodyType,
 } from "./body.js";
 
 const elements = {
@@ -36,6 +39,7 @@ const elements = {
 };
 
 let initialized = false;
+let isSynchronizingUrl = false;
 
 function cacheElements() {
     elements.url = document.getElementById("request-url");
@@ -46,6 +50,7 @@ function cacheElements() {
 function bindEvents() {
     elements.url?.addEventListener("input", handleUrlChange);
     elements.authType?.addEventListener("change", handleAuthChange);
+    document.addEventListener("query-params:change", handleParamsChange);
 }
 
 function handleUrlChange(event) {
@@ -53,6 +58,33 @@ function handleUrlChange(event) {
 
     setRequestUrl(url);
     state.request.url = url;
+
+    if (!isSynchronizingUrl) {
+        isSynchronizingUrl = true;
+        setQueryParams(parseQueryParamsFromUrl(url));
+        isSynchronizingUrl = false;
+    }
+}
+
+function handleParamsChange(event) {
+    if (isSynchronizingUrl || !elements.url) return;
+
+    try {
+        const url = new URL(elements.url.value.trim());
+        url.search = "";
+
+        (event.detail?.params || []).forEach((param) => {
+            if (param.enabled === false || !String(param.key || "").trim()) return;
+            url.searchParams.append(String(param.key).trim(), String(param.value ?? ""));
+        });
+
+        isSynchronizingUrl = true;
+        setRequestUrl(url.href);
+        state.request.url = url.href;
+        isSynchronizingUrl = false;
+    } catch {
+        // Retain an incomplete or invalid URL while the user is editing it.
+    }
 }
 
 function handleAuthChange(event) {
@@ -90,6 +122,7 @@ export function syncFromUI() {
     state.request.params = getQueryParams();
     state.request.headers = getHeaders();
     state.request.body = getRequestBody();
+    state.request.bodyType = getBodyType();
 
     if (elements.authType) {
         state.request.auth.type =
@@ -118,6 +151,7 @@ export function syncStateToUI() {
             : []
     );
 
+    setBodyType(state.request.bodyType || "json");
     setRequestBody(state.request.body || "");
 
     if (elements.authType) {
@@ -137,6 +171,7 @@ export function getRequest() {
         params: [...state.request.params],
         headers: [...state.request.headers],
         body: state.request.body,
+        bodyType: state.request.bodyType,
         auth: {
             type: state.request.auth.type,
             fields: {
@@ -158,6 +193,7 @@ export function setRequest(request = {}) {
             ? request.headers
             : [],
         body: request.body || "",
+        bodyType: request.bodyType || "json",
         auth: {
             type: request.auth?.type || "none",
             fields: {
@@ -178,6 +214,7 @@ export function resetRequest() {
         params: [],
         headers: [],
         body: "",
+        bodyType: "json",
         auth: {
             type: "none",
             fields: {},
@@ -361,6 +398,27 @@ function renderAuthFields() {
                     event.target.value;
             });
         }
+
+        return;
+    }
+
+    if (type === "oauth2") {
+        container.innerHTML = `
+            <div class="rounded-md border border-border-subtle bg-surface-raised p-3 text-xs leading-5 text-muted-foreground">
+                OAuth configuration is saved with this request. Browser-only apps may require a configured public-client redirect or a backend token exchange.
+            </div>
+            <div class="mt-3 space-y-3">
+                <div><label for="oauth-authorization-url" class="mb-1.5 block text-xs font-medium">Authorization URL</label><input id="oauth-authorization-url" class="h-9 w-full rounded-md border border-border bg-surface px-3 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20" placeholder="https://provider.example/authorize" /></div>
+                <div><label for="oauth-token-url" class="mb-1.5 block text-xs font-medium">Token URL</label><input id="oauth-token-url" class="h-9 w-full rounded-md border border-border bg-surface px-3 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20" placeholder="https://provider.example/token" /></div>
+                <div><label for="oauth-client-id" class="mb-1.5 block text-xs font-medium">Client ID</label><input id="oauth-client-id" class="h-9 w-full rounded-md border border-border bg-surface px-3 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20" /></div>
+                <div><label for="oauth-scope" class="mb-1.5 block text-xs font-medium">Scope</label><input id="oauth-scope" class="h-9 w-full rounded-md border border-border bg-surface px-3 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20" placeholder="read write" /></div>
+            </div>
+        `;
+
+        bindAuthInput("oauth-authorization-url", "authorizationUrl", fields.authorizationUrl);
+        bindAuthInput("oauth-token-url", "tokenUrl", fields.tokenUrl);
+        bindAuthInput("oauth-client-id", "clientId", fields.clientId);
+        bindAuthInput("oauth-scope", "scope", fields.scope);
     }
 }
 

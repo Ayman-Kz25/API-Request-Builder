@@ -75,6 +75,7 @@ function buildRequestConfig({
   method = DEFAULT_HTTP_METHOD,
   headers = [],
   body = "",
+  bodyType = "json",
   auth = null,
 } = {}) {
   const normalizedMethod =
@@ -91,10 +92,22 @@ function buildRequestConfig({
   };
 
   if (body && !METHODS_WITHOUT_BODY.includes(normalizedMethod)) {
-    config.body = typeof body === "string" ? body : JSON.stringify(body);
+    config.body = body instanceof FormData
+      ? body
+      : typeof body === "string"
+        ? body
+        : JSON.stringify(body);
 
-    if (!requestHeaders.has("Content-Type")) {
-      requestHeaders.set("Content-Type", "application/json");
+    if (!requestHeaders.has("Content-Type") && bodyType !== "multipart") {
+      const contentTypes = {
+        json: "application/json",
+        text: "text/plain",
+        javascript: "application/javascript",
+        xml: "application/xml",
+        html: "text/html",
+        "form-urlencoded": "application/x-www-form-urlencoded",
+      };
+      requestHeaders.set("Content-Type", contentTypes[bodyType] || "application/octet-stream");
     }
   }
   return config;
@@ -105,6 +118,7 @@ export async function sendRequest({
   method = DEFAULT_HTTP_METHOD,
   headers = [],
   body = "",
+  bodyType = "json",
   auth = null,
   timeout = REQUEST_TIMEOUT,
 } = {}) {
@@ -114,6 +128,7 @@ export async function sendRequest({
     method,
     headers,
     body,
+    bodyType,
     auth,
   });
 

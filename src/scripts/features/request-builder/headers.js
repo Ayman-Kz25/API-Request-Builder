@@ -4,6 +4,7 @@ const elements = {
     list: null,
     addButton: null,
     empty: null,
+    preset: null,
 };
 
 let headers = [];
@@ -13,6 +14,7 @@ function cacheElements() {
     elements.list = document.getElementById("headers-list");
     elements.addButton = document.getElementById("add-header-button");
     elements.empty = document.getElementById("headers-empty");
+    elements.preset = document.getElementById("header-preset-select");
 }
 
 function bindEvents() {
@@ -21,6 +23,19 @@ function bindEvents() {
     elements.list?.addEventListener("input", handleInput);
     elements.list?.addEventListener("change", handleInput);
     elements.list?.addEventListener("click", handleClick);
+    elements.preset?.addEventListener("change", handlePreset);
+}
+
+function handlePreset(event) {
+    const value = event.target.value;
+    event.target.value = "";
+
+    if (!value) return;
+
+    const separator = value.indexOf(":");
+    const name = value.slice(0, separator).trim();
+    const headerValue = value.slice(separator + 1);
+    setHeader(name, headerValue);
 }
 
 function handleAdd(event) {

@@ -14,6 +14,7 @@ export const HTTP_METHODS = Object.freeze([
     "DELETE",
     "HEAD",
     "OPTIONS",
+    "TRACE",
 ]);
 
 export const DEFAULT_HTTP_METHOD = "GET";

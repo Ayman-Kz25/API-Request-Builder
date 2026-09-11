@@ -4,9 +4,14 @@ import state from "../../core/state.js";
 import { DEFAULT_HTTP_METHOD, HTTP_METHODS } from "../../core/constants.js";
 
 const SELECTOR_ID = "request-method";
+const CUSTOM_SELECTOR_ID = "custom-request-method";
 
 function getElement() {
     return document.getElementById(SELECTOR_ID);
+}
+
+function getCustomElement() {
+    return document.getElementById(CUSTOM_SELECTOR_ID);
 }
 
 function normalizeMethod(method) {
@@ -24,6 +29,10 @@ export function isValidMethod(method) {
 export function getRequestMethod() {
     const element = getElement();
 
+    if (element?.value === "CUSTOM") {
+        return normalizeMethod(getCustomElement()?.value);
+    }
+
     return normalizeMethod(
         element?.value || state.request.method
     );
@@ -31,14 +40,20 @@ export function getRequestMethod() {
 
 export function setRequestMethod(method) {
     const normalizedMethod = normalizeMethod(method);
-    const finalMethod = isValidMethod(normalizedMethod)
-        ? normalizedMethod
-        : DEFAULT_HTTP_METHOD;
+    const isCustom = !HTTP_METHODS.includes(normalizedMethod);
+    const finalMethod = normalizedMethod || DEFAULT_HTTP_METHOD;
 
     const element = getElement();
 
     if (element) {
-        element.value = finalMethod;
+        element.value = isCustom ? "CUSTOM" : finalMethod;
+    }
+
+    const customElement = getCustomElement();
+
+    if (customElement) {
+        customElement.value = isCustom ? finalMethod : "";
+        customElement.classList.toggle("hidden", !isCustom);
     }
 
     state.request.method = finalMethod;
@@ -58,16 +73,30 @@ export function initMethodSelector() {
     );
 
     element.addEventListener("change", handleMethodChange);
+
+    getCustomElement()?.addEventListener("input", handleCustomMethodChange);
 }
 
 function handleMethodChange(event) {
     const method = event.target?.value;
+
+    if (method === "CUSTOM") {
+        const input = getCustomElement();
+        input?.classList.remove("hidden");
+        input?.focus();
+        state.request.method = normalizeMethod(input?.value) || DEFAULT_HTTP_METHOD;
+        return;
+    }
 
     setRequestMethod(
         isValidMethod(method)
             ? method
             : DEFAULT_HTTP_METHOD
     );
+}
+
+function handleCustomMethodChange(event) {
+    state.request.method = normalizeMethod(event.target?.value) || DEFAULT_HTTP_METHOD;
 }
 
 export function methodAllowsBody(
