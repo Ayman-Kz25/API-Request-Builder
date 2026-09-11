@@ -3,30 +3,30 @@
      Light Theme
      ========================================================= */
 
-  --color-background: #f8f5f7;
-  --color-foreground: #302b31;
+  --color-background: #f5f6f3;
+  --color-foreground: #1a211c;
 
-  --color-surface: #fdfafb;
-  --color-surface-raised: #f1e9ef;
-  --color-surface-hover: #e9dfe8;
+  --color-surface: #ffffff;
+  --color-surface-raised: #eaeee8;
+  --color-surface-hover: #dfe6df;
 
-  --color-border: #ddd1dc;
-  --color-border-subtle: #ebe2e9;
+  --color-border: #d5ddd5;
+  --color-border-subtle: #e6ebe6;
 
-  /* Soft Lavender + Dusty Pink Accent */
+  /* Signal green accent */
 
-  --color-primary: #9b7fa0;
-  --color-primary-hover: #8d708f;
+  --color-primary: #2f7d4a;
+  --color-primary-hover: #25663b;
   --color-primary-foreground: #ffffff;
 
-  --color-muted-foreground: #7c737b;
+  --color-muted-foreground: #657168;
 
   /* Soft pastel semantic colors */
 
-  --color-success: #7f9a87;
-  --color-warning: #ad9368;
-  --color-danger: #b27d87;
-  --color-info: #8e829b;
+  --color-success: #2f7d4a;
+  --color-warning: #a86a1b;
+  --color-danger: #b64635;
+  --color-info: #52735b;
 
   /* Typography */
 
@@ -56,8 +56,8 @@
   /* Shadows */
 
   --shadow-panel:
-    0 1px 2px rgba(48, 43, 49, 0.04),
-    0 8px 24px rgba(48, 43, 49, 0.06);
+    0 1px 2px rgba(26, 33, 28, 0.03),
+    0 14px 34px rgba(26, 33, 28, 0.06);
 
   /* Layout */
 
@@ -70,28 +70,28 @@
      Dark Theme
      ========================================================= */
 
-  --color-background: #1d1a1e;
-  --color-foreground: #e9e2e8;
+  --color-background: #141816;
+  --color-foreground: #e7ece6;
 
-  --color-surface: #252126;
-  --color-surface-raised: #2e2830;
-  --color-surface-hover: #39313a;
+  --color-surface: #1c211e;
+  --color-surface-raised: #252c27;
+  --color-surface-hover: #303a32;
 
-  --color-border: #403841;
-  --color-border-subtle: #342e35;
+  --color-border: #364039;
+  --color-border-subtle: #2c352f;
 
-  /* Muted Lavender + Soft Pink */
+  /* Signal green accent */
 
-  --color-primary: #b69ab9;
-  --color-primary-hover: #c5a9c5;
-  --color-primary-foreground: #29232a;
+  --color-primary: #63b879;
+  --color-primary-hover: #7acc8c;
+  --color-primary-foreground: #102115;
 
-  --color-muted-foreground: #aaa0a8;
+  --color-muted-foreground: #9aa79d;
 
   /* Soft pastel semantic colors */
 
-  --color-success: #91b29a;
-  --color-warning: #c1a573;
-  --color-danger: #c58e99;
-  --color-info: #a497b1;
+  --color-success: #70c889;
+  --color-warning: #d8a247;
+  --color-danger: #e07b6a;
+  --color-info: #89ad91;
 }

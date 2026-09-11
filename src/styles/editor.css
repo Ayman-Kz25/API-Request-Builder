@@ -32,20 +32,20 @@
 
 #json-editor .cm-gutters {
   background: var(--color-surface);
-  color: #596170;
+  color: var(--color-muted-foreground);
   border-right: 1px solid var(--color-border-subtle);
 }
 
 #json-editor .cm-activeLine {
-  background: rgba(255, 255, 255, 0.025);
+  background: color-mix(in srgb, var(--color-primary) 7%, transparent);
 }
 
 #json-editor .cm-activeLineGutter {
-  background: rgba(255, 255, 255, 0.025);
+  background: color-mix(in srgb, var(--color-primary) 7%, transparent);
 }
 
 #json-editor .cm-selectionBackground {
-  background: rgba(99, 102, 241, 0.25) !important;
+  background: color-mix(in srgb, var(--color-primary) 27%, transparent) !important;
 }
 
 #json-editor .cm-cursor {
@@ -60,5 +60,5 @@
   border-color: var(--color-primary);
   box-shadow:
     0 0 0 1px var(--color-primary),
-    0 0 0 3px rgba(99, 102, 241, 0.12);
+    0 0 0 3px color-mix(in srgb, var(--color-primary) 15%, transparent);
 }

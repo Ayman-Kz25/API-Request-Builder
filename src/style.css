@@ -6,3 +6,384 @@
 @import "./styles/utilities.css";
 @import "./styles/reset.css";
 @import "./styles/editor.css";
+
+/* Product shell --------------------------------------------------------- */
+
+#app {
+  min-height: 100dvh;
+  background:
+    radial-gradient(circle at 95% 0%, color-mix(in srgb, var(--color-primary) 10%, transparent), transparent 28rem),
+    var(--color-background);
+}
+
+html,
+body { overflow-y: auto; }
+
+#app > div { min-height: 100dvh; }
+
+/* Overlay roots must not add empty height to the document. */
+#modal-root,
+#dropdown-root {
+  position: absolute !important;
+  inset: 0;
+  height: 0;
+}
+
+#live-region {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  overflow: hidden;
+}
+
+#app-header {
+  height: 64px;
+  background: color-mix(in srgb, var(--color-surface) 92%, transparent);
+  backdrop-filter: blur(14px);
+}
+
+#app-header > div:first-child { width: 272px; }
+
+#app-header a > span:first-child {
+  position: relative;
+  border-radius: 9px;
+  background: var(--color-primary);
+  box-shadow: 0 6px 16px color-mix(in srgb, var(--color-primary) 32%, transparent);
+}
+
+#app-header a > span:first-child::after {
+  position: absolute;
+  inset: 6px;
+  border: 1px solid color-mix(in srgb, white 55%, transparent);
+  border-radius: 5px;
+  content: "";
+}
+
+#workspace-title { letter-spacing: -0.01em; }
+
+#sidebar {
+  width: 272px;
+  background: color-mix(in srgb, var(--color-surface) 88%, var(--color-background));
+}
+
+#sidebar nav { padding: 16px 12px; }
+#sidebar nav > div:first-child > div:first-child { margin-top: 4px; letter-spacing: 0.13em; }
+#sidebar button { border-radius: 8px; }
+
+#new-request-button {
+  background: var(--color-primary) !important;
+  color: var(--color-primary-foreground) !important;
+  box-shadow: 0 8px 18px color-mix(in srgb, var(--color-primary) 20%, transparent);
+}
+
+#new-request-button:hover { filter: brightness(0.96); }
+
+/* Workspace ------------------------------------------------------------- */
+
+#main-content { padding: 12px; gap: 12px; }
+
+#request-workspace,
+#response-workspace {
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: 13px;
+  background: var(--color-surface);
+  box-shadow: var(--shadow-panel);
+}
+
+#request-workspace { flex-basis: 46%; }
+#response-workspace { flex-basis: 54%; }
+
+#request-toolbar {
+  padding: 14px;
+  background: color-mix(in srgb, var(--color-surface-raised) 62%, var(--color-surface));
+}
+
+#request-toolbar select,
+#request-toolbar input {
+  border-color: var(--color-border);
+  background: var(--color-surface);
+  border-radius: 8px;
+}
+
+#request-toolbar select { color: var(--color-primary); }
+
+#request-toolbar input:focus,
+#request-toolbar select:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 14%, transparent);
+}
+
+#send-request-button {
+  border-radius: 8px;
+  background: var(--color-primary);
+  color: var(--color-primary-foreground);
+  box-shadow: 0 6px 15px color-mix(in srgb, var(--color-primary) 25%, transparent);
+}
+
+#send-request-button:hover { background: var(--color-primary-hover); }
+
+#request-tabs,
+#response-tabs {
+  gap: 4px;
+  padding: 6px 10px 0;
+  background: color-mix(in srgb, var(--color-surface-raised) 50%, var(--color-surface));
+}
+
+.request-tab,
+.response-tab {
+  border-bottom-width: 2px !important;
+  border-radius: 6px 6px 0 0;
+}
+
+.request-tab[aria-selected="true"],
+.response-tab[aria-selected="true"] {
+  background: color-mix(in srgb, var(--color-primary) 10%, transparent);
+  color: var(--color-primary) !important;
+}
+
+#request-panel-params > div:first-child,
+#request-panel-headers > div:first-child,
+#request-panel-body > div:first-child {
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+/* Response -------------------------------------------------------------- */
+
+#response-workspace > div:first-child {
+  min-height: 54px;
+  padding: 10px 14px;
+  background: color-mix(in srgb, var(--color-surface-raised) 62%, var(--color-surface));
+}
+
+#response-status,
+#response-duration,
+#response-size { border-radius: 999px; padding: 4px 9px; }
+
+#response-empty-state > div:first-child > div:first-child,
+#feature-placeholder > div > div:first-child {
+  border-color: color-mix(in srgb, var(--color-primary) 32%, var(--color-border));
+  background: color-mix(in srgb, var(--color-primary) 8%, var(--color-surface));
+  color: var(--color-primary);
+}
+
+#response-pretty,
+#response-raw,
+#response-headers-list { font-family: var(--font-mono); }
+
+/* Shared polish --------------------------------------------------------- */
+
+button:not(#new-request-button):not(#send-request-button) { border-radius: 8px; }
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+@media (max-width: 767px) {
+  #main-content { padding: 0; gap: 0; }
+  #request-workspace, #response-workspace { border-right: 0; border-left: 0; border-radius: 0; box-shadow: none; }
+  #app-header > div:first-child { width: auto; border-right: 0; }
+}
+
+/* Command Desk layout --------------------------------------------------- */
+
+#app-header > div:first-child,
+#sidebar { width: 218px; }
+
+#sidebar {
+  background: var(--color-background);
+  border-right-color: var(--color-border-subtle);
+}
+
+#sidebar nav { padding: 22px 12px; }
+
+#sidebar nav > div:first-child > div:first-child {
+  margin: 2px 0 14px;
+  padding: 0 8px;
+  font-size: 10px;
+}
+
+#sidebar button {
+  min-height: 38px;
+  border: 1px solid transparent;
+}
+
+#sidebar button:not(#new-request-button):hover {
+  border-color: var(--color-border-subtle);
+  background: var(--color-surface);
+}
+
+#new-request-button {
+  margin-bottom: 10px;
+  border: 1px solid color-mix(in srgb, var(--color-primary) 75%, transparent) !important;
+}
+
+#main-content {
+  position: relative;
+  display: grid;
+  min-height: auto !important;
+  overflow: visible !important;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(390px, auto) minmax(500px, auto);
+  align-content: stretch;
+  gap: 14px;
+  padding: 14px;
+}
+
+#request-workspace,
+#response-workspace {
+  min-height: 0;
+  height: auto;
+  border-radius: 12px;
+}
+
+#request-workspace { grid-row: 1; min-height: 390px; }
+#response-workspace { grid-row: 2; min-height: 500px; }
+
+#request-workspace::before {
+  display: block;
+  height: 2px;
+  background: linear-gradient(90deg, var(--color-primary), color-mix(in srgb, var(--color-primary) 10%, transparent) 55%, transparent);
+  content: "";
+}
+
+#request-toolbar {
+  position: relative;
+  padding: 16px;
+}
+
+#request-toolbar::before {
+  display: block;
+  margin-bottom: 11px;
+  color: var(--color-muted-foreground);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  content: "Compose call";
+}
+
+#request-toolbar select { min-width: 84px; font-size: 12px; letter-spacing: 0.06em; }
+#request-toolbar input { font-size: 13px; }
+
+#send-request-button {
+  min-width: 104px;
+  letter-spacing: 0.01em;
+}
+
+#request-tabs,
+#response-tabs {
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+.request-tab,
+.response-tab {
+  padding: 10px 12px !important;
+  font-size: 11px;
+}
+
+#response-workspace {
+  background:
+    linear-gradient(var(--color-surface), var(--color-surface)) padding-box,
+    repeating-linear-gradient(0deg, transparent 0, transparent 29px, color-mix(in srgb, var(--color-border) 20%, transparent) 30px) border-box;
+}
+
+#response-workspace > div:first-child {
+  min-height: 68px;
+  padding: 12px 16px;
+}
+
+#request-panel-params,
+#request-panel-headers,
+#request-panel-body,
+#request-panel-auth { padding: 18px 20px; }
+
+#query-params-empty,
+#headers-empty { padding-top: 28px; padding-bottom: 28px; }
+
+#response-empty-state > div:first-child > div:first-child {
+  width: 58px;
+  height: 58px;
+  transform: rotate(-3deg);
+}
+
+/* Signals are deliberately separate from the response console. */
+
+#signals-panel {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  min-width: 0;
+  border-radius: 12px;
+  box-shadow: var(--shadow-panel);
+}
+
+.signal-card {
+  display: flex;
+  min-height: 76px;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 14px;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 9px;
+  background: color-mix(in srgb, var(--color-surface-raised) 38%, var(--color-surface));
+}
+
+.signal-label {
+  color: var(--color-muted-foreground);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.signal-value,
+.signal-empty { font-size: 12px; font-weight: 600; }
+.signal-empty { color: var(--color-muted-foreground); font-weight: 400; }
+
+#response-status[data-status="success"] { color: var(--color-success); }
+#response-status[data-status="redirect"] { color: var(--color-warning); }
+#response-status[data-status="client-error"],
+#response-status[data-status="server-error"] { color: var(--color-danger); }
+
+#response-status:not(.hidden) ~ .signal-empty,
+#response-duration:not(.hidden) ~ .signal-empty,
+#response-size:not(.hidden) ~ .signal-empty { display: none; }
+
+#feature-placeholder { grid-column: 1 / -1; grid-row: 1 / -1; }
+#feature-placeholder:not(.hidden) ~ #signals-panel { display: none !important; }
+
+@media (min-width: 1280px) {
+  #main-content {
+    grid-template-columns: minmax(0, 1fr) 224px;
+    grid-template-rows: minmax(390px, auto) minmax(500px, auto);
+  }
+}
+
+@media (max-width: 1279px) {
+  #main-content { grid-template-columns: minmax(0, 1fr); }
+}
+
+@media (max-width: 767px) {
+  #main-content {
+    display: flex;
+    min-height: auto !important;
+    gap: 0;
+    padding: 0;
+  }
+
+  #request-workspace { flex: 0 0 auto; min-height: 390px; }
+  #response-workspace { flex: 0 0 auto; min-height: 500px; }
+  #request-toolbar::before { display: none; }
+
+  #request-panel-params,
+  #request-panel-headers,
+  #request-panel-body,
+  #request-panel-auth { padding: 14px; }
+}

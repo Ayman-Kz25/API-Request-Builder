@@ -8,18 +8,17 @@
     <meta
       name="description"
       content="Endpoint is a focused workspace for building, testing, and inspecting HTTP requests." />
-    <meta name="theme-color" content="#0b0d10" />
+    <meta name="theme-color" content="#141816" />
 
     <title>Endpoint - HTTP Request Workspace</title>
 
-    <link rel="stylesheet" href="style.css" />
   </head>
 
-  <body class="min-h-full min-w-0 overflow-hidden">
+  <body class="min-h-full min-w-0">
     <div
       id="app"
-      class="h-dvh min-h-0 min-w-0 overflow-hidden bg-background text-foreground">
-      <div class="flex h-full min-h-0 min-w-0 flex-col">
+      class="min-h-dvh min-w-0 bg-background text-foreground">
+      <div class="flex min-h-dvh min-w-0 flex-col">
 
         <!-- Header -->
         <header
@@ -65,7 +64,7 @@
                 <p
                   id="workspace-title"
                   class="truncate text-sm font-medium">
-                  Workspace
+                  Workbench
                 </p>
 
                 <p
@@ -662,28 +661,16 @@
                 class="flex shrink-0 flex-col gap-2 border-b border-border bg-surface px-3 py-2.5 sm:flex-row sm:items-center sm:justify-between sm:px-4">
                 <div
                   class="flex min-w-0 flex-wrap items-center gap-2 sm:gap-3">
-                  <h2 class="text-sm font-semibold">
-                    Response
-                  </h2>
+                  <div>
+                    <p
+                      class="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+                      Output stream
+                    </p>
 
-                  <span
-                    id="response-status"
-                    class="hidden rounded-full px-2 py-0.5 text-[11px] font-medium"
-                    aria-live="polite">
-                    200 OK
-                  </span>
-
-                  <span
-                    id="response-duration"
-                    class="hidden text-[11px] text-muted-foreground">
-                    184 ms
-                  </span>
-
-                  <span
-                    id="response-size"
-                    class="hidden text-[11px] text-muted-foreground">
-                    1.2 KB
-                  </span>
+                    <h2 class="mt-0.5 text-sm font-semibold">
+                      Response Console
+                    </h2>
+                  </div>
                 </div>
 
                 <div class="flex shrink-0 items-center gap-1">
@@ -857,6 +844,63 @@
                 </section>
               </div>
             </section>
+
+            <!-- Request signals -->
+            <aside
+              id="signals-panel"
+              class="hidden min-h-0 flex-col overflow-hidden border border-border bg-surface xl:flex"
+              aria-label="Request signals">
+              <div class="border-b border-border px-4 py-4">
+                <p
+                  class="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+                  Request signals
+                </p>
+
+                <p class="mt-1 text-sm font-semibold">
+                  Live telemetry
+                </p>
+              </div>
+
+              <div class="flex flex-1 flex-col gap-3 p-3">
+                <div class="signal-card">
+                  <span class="signal-label">State</span>
+                  <span class="signal-value">Ready to send</span>
+                </div>
+
+                <div class="signal-card">
+                  <span class="signal-label">Response</span>
+                  <span
+                    id="response-status"
+                    class="hidden text-sm font-semibold"
+                    aria-live="polite"></span>
+                  <span class="signal-empty">Awaiting response</span>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                  <div class="signal-card">
+                    <span class="signal-label">Duration</span>
+                    <span
+                      id="response-duration"
+                      class="hidden text-sm font-semibold"></span>
+                    <span class="signal-empty">—</span>
+                  </div>
+
+                  <div class="signal-card">
+                    <span class="signal-label">Payload</span>
+                    <span
+                      id="response-size"
+                      class="hidden text-sm font-semibold"></span>
+                    <span class="signal-empty">—</span>
+                  </div>
+                </div>
+
+                <div class="mt-auto border-t border-border-subtle pt-4">
+                  <p class="text-[11px] leading-5 text-muted-foreground">
+                    Results remain here while you explore the response console.
+                  </p>
+                </div>
+              </div>
+            </aside>
           </main>
         </div>
       </div>
